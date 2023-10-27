@@ -1,3 +1,5 @@
+package src;
+
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.screen.Screen;
@@ -34,10 +36,10 @@ public class Game {
     private void processKey(KeyStroke key) throws IOException {
         _arena.processKey(key);
     }
-    private void draw(Screen screen) throws Exception {
-        screen.clear();
-        _arena.draw(screen);
-        screen.refresh();
+    private void draw() throws Exception {
+        _screen.clear();
+        _arena.draw(_screen.newTextGraphics());
+        _screen.refresh();
     }
 
     /*
@@ -45,7 +47,7 @@ public class Game {
     public void run() {
         while (true) {
             try {
-                draw(Game.this._screen);
+                draw();
             }
             catch (Exception e){
                 break;
