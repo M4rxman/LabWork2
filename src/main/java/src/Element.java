@@ -12,6 +12,10 @@ public class Element {
         _position.setY(position.getY());
         _position.setX(position.getX());
     }
+
+    Position getPosition(){
+        return _position;
+    }
     public Position moveUp() {return new Position(_position.getX(), _position.getY() - 1);}
     public Position moveDown() {
         return new Position(_position.getX(), _position.getY() + 1);

@@ -21,6 +21,7 @@ public class Arena {
     int _height;
     private List<Wall> _walls;
     private List<Coin> _coins;
+    private List<Monster> _monsters;
 
 
     Arena(int width, int height, Screen screen){
@@ -29,14 +30,24 @@ public class Arena {
         _screen = screen;
         this._walls = createWalls(2, 17);
         this._coins = createCoins();
+        this._monsters = createMonsters();
     }
     private void moveHero(Position position) {
-        retrieveCoins(position, _coins);
+
+        for(Coin coin : _coins){
+            if(coin.retrieveCoins(position, _coins) != null){
+                _hero.heroFoundCoin();
+                coin.takeCoin(coin, _coins, coin.coinGraphics);
+                break;
+            }
+        }
+
         boolean collision = false;
         _walls.get(0)._height = _walls.get(_walls.size() - 1)._height;
         _walls.get(0)._width  = _walls.get(_walls.size() - 1)._width;
+
        for (Wall wall : _walls){
-           if(wall._position.equals(position)){
+           if(wall._position.equals(position) || wall.wallCollision(position)){
                collision = true;
                System.out.println("Collision!!!");
                break;
@@ -46,10 +57,6 @@ public class Arena {
            _hero.setPosition(position);
        }
 
-    }
-
-    private void retrieveCoins(Position position, List<Coin> coins) {
-        _coins.forEach(coin -> coin.retrieveCoins(position, _coins));
     }
 
     public void processKey(KeyStroke keyStroke) throws IOException {
@@ -90,8 +97,15 @@ public class Arena {
 
             _hero.heriocDrawing(textGraphics);
 
-            for (Coin coin : _coins)
+            for (Coin coin : _coins){
                 coin.draw(textGraphics);
+                coin.setCoinGraphics(textGraphics);
+            }
+
+            for (Monster monster : _monsters) {
+                monster.draw(textGraphics);
+            }
+
             _screen.refresh();
 
             KeyStroke key = _screen.readInput();
@@ -124,6 +138,35 @@ public class Arena {
         return coins;
     }
 
+    private List<Monster> createMonsters() {
+        List<Monster> monsters = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < 3; i++) { // Create three monsters as an example
+            monsters.add(new Monster(random.nextInt(_width - 2) + 1, random.nextInt(_height - 2) + 1));
+        }
+        return monsters;
+    }
 
+    public void moveMonsters() {
+        for (Monster monster : _monsters) {
+            Position newPosition = monster.move();
+            // Implement collision detection with walls or other elements here
+            // If the new position is valid, update the monster's position
+            // Otherwise, the monster stays in the current position
+            monster.setPosition(newPosition);
+        }
+    }
+
+    public boolean verifyMonsterCollisions() {
+        for (Monster monster : _monsters) {
+            if (_hero.getPosition().equals(monster.getPosition())) {
+                // Handle the collision here (e.g., game termination and message)
+                System.out.println("Hero touched a Monster! Game over!");
+                // You can implement game over logic or other actions here
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

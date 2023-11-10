@@ -50,7 +50,9 @@ public class Game {
                 draw();
             }
             catch (Exception e){
+                System.out.println("You broke the game");
                 break;
+
             }
         }
     }

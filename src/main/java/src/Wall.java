@@ -5,10 +5,13 @@ import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
+import static com.googlecode.lanterna.Symbols.BLOCK_MIDDLE;
+
 //my humor is completely broken, I laughed at the word wall, why?
 public class Wall extends Element{
     int _height;
     int _width;
+
 
     Wall(int width, int height) {
         super(24,4);
@@ -17,17 +20,17 @@ public class Wall extends Element{
     }
 
 // this is total fuckery
-    /*boolean wallCollision(src.Position position){
-        if((position.getX() >= _position.getX() && position.getX() <= _position.getX() + _width)
-        && (position.getY() <= _position.getY() && position.getY() >= _position.getY() + _height)){
+    boolean wallCollision(src.Position position){
+        if((position.getX() >= _position.getX() && position.getX() <= _position.getX() + _width - 1)
+        && (position.getY() >= _position.getY() && position.getY() <= _position.getY() + _height - 1)){
             return true;
         }
         return false;
-    }*/
+    }
 
     void draw(TextGraphics textGraphics){
         textGraphics.setBackgroundColor(TextColor.Factory.fromString("#336699"));
         textGraphics.fillRectangle(new TerminalPosition(_position.getX(), _position.getY()), new
-                TerminalSize(_width, _height), '#');
+                TerminalSize(_width, _height), BLOCK_MIDDLE);
     }
 }
